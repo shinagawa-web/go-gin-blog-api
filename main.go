@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"go-gin-blog-api/handler"
+	"go-gin-blog-api/service"
 )
 
 func main() {
@@ -14,7 +15,9 @@ func main() {
 		})
 	})
 
-	handler.RegisterPostRoutes(r)
+	postService := service.NewPostService()
+	postHandler := handler.NewPostHandler(postService)
+	postHandler.RegisterRoutes(r)
 
 	r.Run(":8080") // ポート8080で起動
 }

@@ -2,42 +2,37 @@ package handler
 
 import (
 	"go-gin-blog-api/model"
+	"go-gin-blog-api/service"
 	"net/http"
-	"sync"
 
 	"github.com/gin-gonic/gin"
 )
 
-// 簡易的なメモリ保存（本来はDBを使う）
-var (
-	posts = []model.Post{}
-	mutex = &sync.Mutex{}
-)
-
-func RegisterPostRoutes(r *gin.Engine) {
-	r.POST("/posts", CreatePost)
-	r.GET("/posts", GetPosts)
+type PostHandler struct {
+	postService service.PostService
 }
 
-// 記事の投稿ハンドラ
-func CreatePost(c *gin.Context) {
+func NewPostHandler(s service.PostService) *PostHandler {
+	return &PostHandler{postService: s}
+}
+
+func (h *PostHandler) RegisterRoutes(r *gin.Engine) {
+	r.POST("/posts", h.CreatePost)
+	r.GET("/posts", h.GetPosts)
+}
+
+func (h *PostHandler) CreatePost(c *gin.Context) {
 	var newPost model.Post
 	if err := c.ShouldBindJSON(&newPost); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	mutex.Lock()
-	posts = append(posts, newPost)
-	mutex.Unlock()
-
-	c.JSON(http.StatusCreated, newPost)
+	created := h.postService.Create(newPost)
+	c.JSON(http.StatusCreated, created)
 }
 
-// 記事一覧取得ハンドラ
-func GetPosts(c *gin.Context) {
-	mutex.Lock()
-	defer mutex.Unlock()
-
+func (h *PostHandler) GetPosts(c *gin.Context) {
+	posts := h.postService.List()
 	c.JSON(http.StatusOK, posts)
 }
