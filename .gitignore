@@ -1,0 +1,33 @@
+# Go build artifacts
+/bin/
+/pkg/
+/*.exe
+/*.exe~
+/*.dll
+/*.so
+/*.dylib
+/*.test
+
+# Output of the go coverage tool
+*.out
+
+# Dependency directories (optional)
+/vendor/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*.DS_Store
+
+# Air temporary files
+tmp/
+.air.toml
+
+# Logs
+*.log
+
+# Env and config files
+.env
+.env.*
