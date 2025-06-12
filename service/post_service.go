@@ -6,7 +6,7 @@ import (
 )
 
 type PostService interface {
-	Create(post model.Post) model.Post
+	Create(post model.Post) *model.Post
 	List() []model.Post
 	GetByID(id string) (*model.Post, bool)
 	Update(id string, updated model.Post) (*model.Post, bool)
@@ -21,7 +21,7 @@ func NewPostService(r repository.PostRepository) PostService {
 	return &postService{repo: r}
 }
 
-func (s *postService) Create(post model.Post) model.Post {
+func (s *postService) Create(post model.Post) *model.Post {
 	return s.repo.Save(post)
 }
 

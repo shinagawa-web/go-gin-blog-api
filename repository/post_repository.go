@@ -6,7 +6,7 @@ import (
 )
 
 type PostRepository interface {
-	Save(post model.Post) model.Post
+	Save(post model.Post) *model.Post
 	FindAll() []model.Post
 	FindByID(id string) (*model.Post, bool)
 	Update(id string, updated model.Post) (*model.Post, bool)
@@ -24,12 +24,12 @@ func NewPostRepository() PostRepository {
 	}
 }
 
-func (r *postRepository) Save(post model.Post) model.Post {
+func (r *postRepository) Save(post model.Post) *model.Post {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	r.posts = append(r.posts, post)
-	return post
+	return &post
 }
 
 func (r *postRepository) FindAll() []model.Post {
