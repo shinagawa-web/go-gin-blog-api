@@ -1,13 +1,18 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
+	"go-gin-blog-api/config"
 	"go-gin-blog-api/handler"
 	"go-gin-blog-api/repository"
 	"go-gin-blog-api/service"
+	"log"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	config.Load()
 	r := gin.Default()
 
 	r.GET("/healthz", func(c *gin.Context) {
@@ -21,5 +26,7 @@ func main() {
 	postHandler := handler.NewPostHandler(postService)
 	postHandler.RegisterRoutes(r)
 
-	r.Run(":8080") // ポート8080で起動
+	addr := fmt.Sprintf(":%s", config.AppConfig.Port)
+	log.Printf("Server running on %s (%s)", addr, config.AppConfig.Env)
+	r.Run(addr)
 }
