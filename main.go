@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"go-gin-blog-api/handler"
+	"go-gin-blog-api/repository"
 	"go-gin-blog-api/service"
 )
 
@@ -15,7 +16,8 @@ func main() {
 		})
 	})
 
-	postService := service.NewPostService()
+	postRepo := repository.NewPostRepository()
+	postService := service.NewPostService(postRepo)
 	postHandler := handler.NewPostHandler(postService)
 	postHandler.RegisterRoutes(r)
 

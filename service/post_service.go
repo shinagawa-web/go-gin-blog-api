@@ -2,7 +2,7 @@ package service
 
 import (
 	"go-gin-blog-api/model"
-	"sync"
+	"go-gin-blog-api/repository"
 )
 
 type PostService interface {
@@ -11,27 +11,17 @@ type PostService interface {
 }
 
 type postService struct {
-	mu    sync.Mutex
-	posts []model.Post
+	repo repository.PostRepository
 }
 
-func NewPostService() PostService {
-	return &postService{
-		posts: make([]model.Post, 0),
-	}
+func NewPostService(r repository.PostRepository) PostService {
+	return &postService{repo: r}
 }
 
 func (s *postService) Create(post model.Post) model.Post {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
-	s.posts = append(s.posts, post)
-	return post
+	return s.repo.Save(post)
 }
 
 func (s *postService) List() []model.Post {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
-	return append([]model.Post(nil), s.posts...)
+	return s.repo.FindAll()
 }
