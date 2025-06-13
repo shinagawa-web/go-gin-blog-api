@@ -14,7 +14,7 @@ type Config struct {
 
 var AppConfig *Config
 
-func Load() {
+func Load() *Config {
 	_ = godotenv.Load()
 
 	AppConfig = &Config{
@@ -22,6 +22,7 @@ func Load() {
 		Port:     getEnv("PORT", "8080"),
 		LogLevel: getEnv("LOG_LEVEL", "debug"),
 	}
+	return AppConfig
 }
 
 func getEnv(key, fallback string) string {
