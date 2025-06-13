@@ -7,6 +7,7 @@ import (
 	"go-gin-blog-api/logger"
 	"go-gin-blog-api/repository"
 	"go-gin-blog-api/service"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -28,6 +29,11 @@ func New() (*gin.Engine, error) {
 
 	r.GET("/healthz", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
+	})
+
+	r.GET("/slow", func(c *gin.Context) {
+		time.Sleep(3 * time.Second)
+		c.JSON(200, gin.H{"message": "done"})
 	})
 
 	return r, nil
